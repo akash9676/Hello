@@ -1,0 +1,302 @@
+  
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"/>
+
+    <Button
+        android:id="@+id/fragment1btn"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:backgroundTint="@color/black"
+        android:text="Fragment 1"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginStart="50dp"/>
+
+    <Button
+        android:id="@+id/fragment2btn"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:backgroundTint="@color/black"
+        android:text="Fragment 2"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginEnd="50dp"/>
+
+</RelativeLayout>
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fragment1color"
+    tools:context=".fragment1">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="Fragment 1"
+        android:textSize="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/dataFrom2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:textColor="@color/black"
+        android:textSize="26dp"/>
+
+    <EditText
+        android:id="@+id/fragment1Data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="26dp"
+        android:layout_marginTop="300dp"
+        android:ems="10"
+        android:hint="Data to Fragment 2"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sendData1btn"
+        android:text="Send Data to Fragment 2"
+        android:backgroundTint="@color/black"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/fragment1Data"
+        android:layout_marginTop="20dp"/>
+
+
+</RelativeLayout>
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fragment2color"
+    tools:context=".fragment2">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fragment 2"
+        android:textSize="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
+
+
+    <TextView
+        android:id="@+id/dataFrom1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:textColor="@color/black"
+        android:textSize="26dp"/>
+
+    <EditText
+        android:id="@+id/fragment2Data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="300dp"
+        android:layout_marginHorizontal="26dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Data to Fragment 1" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sendData2btn"
+        android:text="Send Data to Fragment 1"
+        android:backgroundTint="@color/black"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/fragment2Data"
+        android:layout_marginTop="20dp"/>
+
+</RelativeLayout>
+
+package com.example.fragments;
+
+import android.app.FragmentManager;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class fragment1 extends Fragment {
+
+    View view;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_fragment1, container, false);
+
+        Button button = view.findViewById(R.id.sendData1btn);
+
+        getParentFragmentManager().setFragmentResultListener("dataFrom2", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+
+                String data = result.getString("df2");
+                TextView textView = view.findViewById(R.id.dataFrom2);
+                textView.setText(data);
+                
+            }
+        });
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                EditText editText = view.findViewById(R.id.fragment1Data);
+                Bundle result = new Bundle();
+                result.putString("df1",editText.getText().toString());
+                getParentFragmentManager().setFragmentResult("dataFrom1",result);
+                editText.setText("");
+            }
+        });
+
+        return view;
+    }
+}
+
+package com.example.fragments;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
+
+public class fragment2 extends Fragment {
+
+    View view;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_fragment2, container, false);
+
+
+        Button button = view.findViewById(R.id.sendData2btn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                EditText editText = view.findViewById(R.id.fragment2Data);
+                Bundle result = new Bundle();
+                result.putString("df2",editText.getText().toString());
+                getParentFragmentManager().setFragmentResult("dataFrom2",result);
+                editText.setText("");
+
+            }
+        });
+
+        getParentFragmentManager().setFragmentResultListener("dataFrom1", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+
+                String data = result.getString("df1");
+                TextView textView = view.findViewById(R.id.dataFrom1);
+                textView.setText(data);
+
+            }
+        });
+
+        return view;
+    }
+}
+
+
+package com.example.fragments;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+public class MainActivity extends AppCompatActivity {
+
+    Button firstFragmentBtn, secondFragmentBtn;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        firstFragmentBtn = findViewById(R.id.fragment1btn);
+        secondFragmentBtn = findViewById(R.id.fragment2btn);
+        firstFragmentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                replaceFragment(new fragment1());
+            }
+        });
+        secondFragmentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new fragment2());
+
+            }
+        });
+
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout,fragment);
+        fragmentTransaction.commit();
+
+    }
+}
